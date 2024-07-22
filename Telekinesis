@@ -8,38 +8,12 @@ print("Discord url has been copied to your clipboard!")
 wait(1.2)
 game.StarterGui:SetCore("SendNotification", {
 Title = "Welcome"; -- the title (ofc)
-Text = "Script Made By VestaHub"; -- what the text says (ofc)
+Text = "Script Made By LynethHub"; -- what the text says (ofc)
 Icon = ""; -- the image if u want. 
 Duration = 5; -- how long the notification should in secounds
 })
 
 
--- Press a block to pick it (ignores anchored blocks) (there is a thing called network ownership so you cannot pick it but works on games sometimes like da hood)
--- Long Press - Flings a block (power is customizable at line 19)
--- Unequip  - Releases a block
-
--- Create a ScreenGui to hold the GUI elements
-
-
-Range = "Min" -- "Min" (idk), "Max" (lag), "Default" (fastest)
-
-local BP = Instance.new("BodyPosition")
-BP.maxForce = Vector3.new(math.huge * math.huge, math.huge * math.huge, math.huge * math.huge)
-BP.P = BP.P * 1.1
-
-local BP = Instance.new("BodyPosition")
-BP.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-BP.Position = BP.Position + Vector3.new(0, 0.1, 0)
-
-task.spawn(function()
-game:GetService("RunService").RenderStepped:Connect(function()
-if Range == "Max" then
-sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 0)
-elseif Range == "Min" then
-sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", 500)
-end
-end)
-end)
 
 local function a(b, c)
     local d = getfenv(c)
@@ -57,8 +31,6 @@ local function a(b, c)
     setfenv(c, e)
     return c
 end
-local power = 1000
-local usrinput = game:GetService("UserInputService")
 local g = {}
 local h = Instance.new("Model", game:GetService("Lighting"))
 local i = Instance.new("Tool")
@@ -156,7 +128,7 @@ table.insert(
             found = false
             BP = Instance.new("BodyPosition")
             BP.maxForce = Vector3.new(math.huge * math.huge, math.huge * math.huge, math.huge * math.huge)
-            BP.P = BP.P * 2
+            BP.P = BP.P * 1.1
             dist = nil
             point = Instance.new("Part")
             point.Locked = true
@@ -313,8 +285,6 @@ table.insert(
                 end
             end
             function onEquipped(B)
-                touched = false
-                uneq = false
                 keymouse = B
                 local I = tool.Parent
                 human = I.Humanoid
@@ -322,33 +292,22 @@ table.insert(
                     function()
                         if human.Health == 0 then
                             mousedown = false
-                            uneq = true
-                            touched = false
                             BP:remove()
                             point:remove()
                             tool:remove()
                         end
                     end
                 )
-                usrinput.TouchTapInWorld:connect(
+                B.Button1Down:connect(
                     function()
-                        if uneq == false then
-                        if touched == false then
                         onButton1Down(B)
-                        touched = true
-                        elseif touched == true then
-                        touched = false
-                        end
-                        end
                     end
                 )
-                usrinput.TouchLongPress:connect(function()
-                    if uneq == false then
-                        if dist ~= power then
-                            dist = power
-                        end
+                B.Button1Up:connect(
+                    function()
+                        mousedown = false
                     end
-                end)
+                )
                 B.KeyDown:connect(
                     function(E)
                         onKeyDown(E, B)
@@ -357,7 +316,6 @@ table.insert(
                 B.Icon = "rbxasset://textures\\GunCursor.png"
             end
             tool.Equipped:connect(onEquipped)
-            tool.Unequipped:connect(function() uneq = true touched = false mousedown = false end)
         end
     )
 )
